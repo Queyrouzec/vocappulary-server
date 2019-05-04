@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const Clarifai = require('clarifai');
 var cloudinary = require('cloudinary').v2;
+const { googleTranslate } = require('../apiHelpers');
 
 const app = new Clarifai.App({ apiKey: process.env.CLARIFAI_KEY });
 
