@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@google-cloud/text-to-speech": "^0.5.1",
+    "@google-cloud/translate": "^3.0.1",
     "aws-sdk": "^2.448.0",
     "body-parser": "^1.19.0",
     "clarifai": "^2.9.0",
