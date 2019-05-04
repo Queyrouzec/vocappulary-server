@@ -253,7 +253,7 @@ sequelize
     const langPromses = languages.map(lang => new Promise((res, rej) => {
         Language.findOrCreate({
           where: {name: lang.name},
-          defaults: {lang}
+          defaults: lang,
         })
             .then(rows => res(rows))
     }))
