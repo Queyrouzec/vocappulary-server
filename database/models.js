@@ -427,16 +427,35 @@ const getAllLanguages = () => Language.findAll();
 
 
 
+/**
+ * makes a new user
+ * @param {string} username 
+ * @param {string} email 
+ * @param {number} currentLanguageId 
+ * @param {number} nativeLanguageId 
+ * @param {number} points
+ * @returns new user obejct 
+ */
 const makeUser = (username, email, currentLanguageId, nativeLanguageId, points) => 
   User.create({username, email, currentLanguageId, nativeLanguageId, points})
 
 
 
+/**
+ * finds a user by their email
+ * @param {string} email 
+ * @returns returns the user
+ */
 const findUser = (email) => 
   User.findOne({where: {email}})
 
 
 
+/**
+ * removes a collection item then returns the collection information of the deleted item. 
+ * @param {number} id
+ * @returns collectionRow
+ */
 const removeCollectionItem = (id) => {
   return CollectionItem.findOne({
     where: {
@@ -450,7 +469,7 @@ const removeCollectionItem = (id) => {
       return deletedCollectionItem.getCollection();
     })
     .then(collectionRow => {
-      collectionRow.update({
+      return collectionRow.update({
         count: collectionRow.count - 1,
       }, {
         fields: ['count'],
@@ -460,6 +479,12 @@ const removeCollectionItem = (id) => {
 
 
 
+/**
+ * can edit a collection's info
+ * @param {number} id 
+ * @param {object} collectionProperties - has two properties: name and public
+ * @returns the updated collection row 
+ */
 const editCollection = (id, collectionProperties) => {
   const collectionEditorObj = {};
   const acceptedProps = ["name", "public"];
@@ -467,10 +492,10 @@ const editCollection = (id, collectionProperties) => {
   for (let collectionKey in collectionProperties) {
     if(acceptedProps.indexOf(collectionKey) !== -1) {
       fields.push(collectionKey)
-      collectionEditorObj.collectionKey = collectionProperties.collectionKey
+      collectionEditorObj[collectionKey] = collectionProperties[collectionKey]
     }
   }
-  return Collection.findeOne({
+  return Collection.findOne({
     where: {
       id,
     }
@@ -482,6 +507,12 @@ const editCollection = (id, collectionProperties) => {
 
 
 
+/**
+ * copies a collection to another user's account
+ * @param {number} collectionId - collection being copied
+ * @param {number} userId - new user's id
+ * @param {boolean} isPublic - defaluts to false
+ */
 const copyCollection = (collectionId, userId, isPublic = false) => {
   return Collection.findOne({
     id: collectionId,
@@ -493,6 +524,7 @@ const copyCollection = (collectionId, userId, isPublic = false) => {
             name: collectionRow.name,
             count: collectionRow.count,
             userId,
+            public: isPublic,
           })
             .then(collectionRow => {
               res(collectionRow);
@@ -553,4 +585,7 @@ module.exports.db = {
   getAllLanguages,
   makeUser,
   findUser,
+  removeCollectionItem,
+  editCollection,
+  copyCollection,
 };

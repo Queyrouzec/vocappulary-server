@@ -39,10 +39,21 @@ router.post('/', (req,res) => {
     });
 })
 
+/**
+ * removes a collection item by id
+ */
+router.patch('/remove', (req, res) => {
 
-router.patch('/', (req, res) => {
+  const { id } = req.body;
 
-  const {} = req.body;
+  db.removeCollectionItem(id)
+    .then(deletedItemRow => {
+      res.status(200).json(deletedItemRow);
+    })
+    .catch(err => {
+      console.error(err);
+      res.sendStatus(500);
+    })
 
 })
 

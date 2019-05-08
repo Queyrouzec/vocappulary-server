@@ -37,5 +37,39 @@ router.post('/get', (req, res)=>{
   })
 });
 
+/**
+ * 
+ */
+router.patch('/', (req, res) => {
+
+  const { id, public, name} = req.body
+
+  db.editCollection(id, {public, name})
+    .then(collectionRow => {
+      res.status(200).json(collectionRow);
+    })
+    .catch(err => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+
+})
+
+
+router.post('/copy', (req, res) => {
+
+  const { collectionId, userId, isPublic } = req.body
+
+  db.copyCollection(collectionId, userId, isPublic)
+    .then(collectionItems => {
+      res.status(200).json(collectionItems)
+    })
+    .catch(err => {
+      console.error(err);
+      res.sendStatus(500);
+    })
+
+})
+
 
 module.exports = router;
