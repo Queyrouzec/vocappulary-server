@@ -437,6 +437,110 @@ const findUser = (email) =>
 
 
 
+const removeCollectionItem = (id) => {
+  return CollectionItem.findOne({
+    where: {
+      id,
+    }
+  })
+    .then(collectionItemRow => {
+      return collectionItemRow.destroy()
+    })
+    .then(deletedCollectionItem => {
+      return deletedCollectionItem.getCollection();
+    })
+    .then(collectionRow => {
+      collectionRow.update({
+        count: collectionRow.count - 1,
+      }, {
+        fields: ['count'],
+      })
+    })
+}
+
+
+
+const editCollection = (id, collectionProperties) => {
+  const collectionEditorObj = {};
+  const acceptedProps = ["name", "public"];
+  const fields = [];
+  for (let collectionKey in collectionProperties) {
+    if(acceptedProps.indexOf(collectionKey) !== -1) {
+      fields.push(collectionKey)
+      collectionEditorObj.collectionKey = collectionProperties.collectionKey
+    }
+  }
+  return Collection.findeOne({
+    where: {
+      id,
+    }
+  })
+    .then(collectionRow => {
+      return collectionRow.update(collectionEditorObj, {fields});
+    })
+}
+
+
+
+const copyCollection = (collectionId, userId, isPublic = false) => {
+  return Collection.findOne({
+    id: collectionId,
+  })
+    .then(collectionRow => {
+      return Promise.all([
+        new Promise((res, rej) => {
+          Collection.create({
+            name: collectionRow.name,
+            count: collectionRow.count,
+            userId,
+          })
+            .then(collectionRow => {
+              res(collectionRow);
+            })
+            .catch(err => {
+              rej(err);
+            })
+        }),
+
+        new Promise((res, rej) => {
+          collectionRow.getCollection_items()
+            .then(collectionItemRows => {
+              res(collectionItemRows);
+            })
+            .catch(err => {
+              rej(err)
+            })
+        })
+      ])
+    })
+
+    .then(collectionAndCollectionObjects => {
+      const newCollection = collectionAndCollectionObjects[0];
+      const collectionItems = collectionAndCollectionObjects[1];
+      const newCollectionItemPromises = collectionItems.map(item => 
+        new Promise((res, rej) => {
+          CollectionItem.create({
+            image_url: item.image_url,
+            wordId: item.wordId,
+            collectionId: newCollection.id,
+          })
+            .then(collectionItem => {
+              res(collectionItem);
+            })
+            .catch(err => {
+              rej(err);
+            })
+          })
+        )
+      return Promise.all(newCollectionItemPromises);
+    })
+    .then(newCollectionItems => {
+      return getAllCollectionItems(newCollectionItems[0].collectionId);
+    })
+};
+
+
+
 module.exports.db = {
   checkWords,
   getTranslation,
