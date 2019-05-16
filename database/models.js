@@ -13,6 +13,19 @@ const {
 const { googleTranslate, googleTextToSpeech } = require('../apiHelpers');
 
 
+/**
+ * Finds a translation of a single collection item, and if the translation doesn't exist it creates
+ * one.
+ * @param {number} collectionItemId
+ * @param {boolean} getAudio - False by default. When set to true gets the audio of a certain word
+ * if it is supported by text-to-speech.
+ * @returns @tyepof {object} - All the relavant collection item information.
+ *    @property {itemId} - Number representing the id of the collectionItem.
+ *    @property {url_image} - The url for the image of the collection item.
+ *    @property {currentTranslation} - The translation of the learning language.
+ *    @property {nativeTranslation} - The translation of the user's native learning language.
+ *    @property {currentAudioUrl} - The url for the audio of the learning language.
+ */
 const findOrCreateTranslations = (collectionItemId, getAudio = false) => CollectionItem.findOne({
   where: {
     id: collectionItemId,

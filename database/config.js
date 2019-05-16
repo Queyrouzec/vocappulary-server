@@ -1,7 +1,10 @@
 const Sequelize = require('sequelize');
 
 const { Model } = Sequelize;
-
+/**
+ * vocapp database
+ * @typeof {object}
+ */
 const sequelize = new Sequelize('vocapp', process.env.DB_USER, process.env.DB_PASSWORD, {
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
@@ -13,11 +16,12 @@ const sequelize = new Sequelize('vocapp', process.env.DB_USER, process.env.DB_PA
       collate: 'utf8_general_ci',
     },
   },
-
-
 });
 
 
+/**
+ * sequelize object users table
+ */
 const User = sequelize.define('user', {
   id: {
     type: Sequelize.INTEGER,
@@ -39,9 +43,16 @@ const User = sequelize.define('user', {
     type: Sequelize.STRING,
     allowNull: true,
   },
+  /**
+   * nativeLanguageId: foriegnKey - languages
+   * currentLanguageId: foriegnKey - languages
+   */
 });
 
 
+/**
+ * sequelize object collections table
+ */
 const Collection = sequelize.define('collection', {
   id: {
     type: Sequelize.INTEGER,
@@ -58,9 +69,15 @@ const Collection = sequelize.define('collection', {
   count: {
     type: Sequelize.INTEGER,
   },
+  /**
+   * userId: foriegnKey - users
+   */
 });
 
 
+/**
+ * sequelize object collectionItems table table
+ */
 const CollectionItem = sequelize.define('collection_item', {
   id: {
     type: Sequelize.INTEGER,
@@ -71,9 +88,15 @@ const CollectionItem = sequelize.define('collection_item', {
   image_url: {
     type: Sequelize.STRING,
   },
+  /**
+   * collectionId: foriegnKey - collections
+   */
 });
 
 
+/**
+ * sequelize object languages table
+ */
 const Language = sequelize.define('language', {
   id: {
     type: Sequelize.INTEGER,
@@ -96,6 +119,9 @@ const Language = sequelize.define('language', {
 });
 
 
+/**
+ * sequelize object words table
+ */
 const Word = sequelize.define('word', {
   id: {
     type: Sequelize.INTEGER,
@@ -109,6 +135,9 @@ const Word = sequelize.define('word', {
 });
 
 
+/**
+ * sequelize object translations table
+ */
 class Translation extends Model {}
 Translation.init({
   id: {
@@ -124,15 +153,27 @@ Translation.init({
     },
   },
   audio_url: Sequelize.STRING,
+  /**
+   * wordId: foriegnKey - words table
+   * languageId: foriegnKey - languages table
+   */
 }, {
   sequelize,
   modelName: 'translation',
 });
 
 
+/**
+ * sequelize object messages table
+ */
 class Message extends Model {}
 Message.init({
   text: Sequelize.TEXT,
+  /**
+   * senderId: foriegnKey - users table
+   * receiverId: foriegnKey - users table
+   * languageId: foriegnKey - languages table
+   */
 }, {
   sequelize,
   modelName: 'message',
@@ -140,9 +181,24 @@ Message.init({
 });
 
 
+/**
+ * sequelize join tables
+ */
 const Buddies = sequelize.define('buddies');
+/**
+ * user1Id: foriegnKey = users table
+ * user2Id: foriegnKey = users table
+ */
 const Request = sequelize.define('requests');
+/**
+ * requesterId: foriegnKey = users table
+ * receiverId: foriegnKey = users table
+ */
 
+
+/**
+ * sequelize relationships
+ */
 User.belongsTo(Language, { as: 'native_language' });
 Language.hasOne(User, { as: 'native_language' });
 
@@ -290,10 +346,6 @@ sequelize
         });
     };
     addLanguages(languages);
-  })
-  .then(() => {
-    // adds moch data
-    // require('../mochData/moch')()
   })
   .catch((err) => {
     // eslint-disable-next-line no-console
