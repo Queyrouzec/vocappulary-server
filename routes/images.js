@@ -48,8 +48,8 @@ router.post('/', isAuthenticated, (req, res) => {
         },
       })
         .then(userCol => userCol.getNative_language())
-        .then(({ langCode }) => {
-          const nativeLanguage = langCode;
+        .then(({ lang_code }) => {
+          const nativeLanguage = lang_code;
           url = result.secure_url;
           app.models.predict(Clarifai.GENERAL_MODEL, url)
             .then(({ outputs }) => {
