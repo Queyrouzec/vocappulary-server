@@ -1,6 +1,5 @@
 require('dotenv').config();
-const express = require('express');
-const router = express.Router();
+const router = require('express').Router();
 const textToSpeech = require('@google-cloud/text-to-speech');
 const fs = require('fs');
 const util = require('util');

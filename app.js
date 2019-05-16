@@ -1,30 +1,14 @@
 require('dotenv').config();
-const express = require('express');
-// const app = express();
-const { app } = require('./appInitialization');
-const router = express.Router();
 const bodyParser = require('body-parser');
-const { db } = require("./database/models");
 const fileUpload = require('express-fileupload');
-const { io } = require('./socketIo');
+const { app } = require('./appInitialization');
+const { db } = require('./database/models');
 
 
 app.use(fileUpload({
   limits: { fileSize: 50 * 1024 * 1024 },
 }));
-app.use(bodyParser.json({ type: 'application/json'}));
-
-
-//////////////
-// WebSocket /
-//////////////
-
-
-
-
-///////////////
-/// Routes ////
-///////////////
+app.use(bodyParser.json({ type: 'application/json' }));
 
 
 const images = require('./routes/images');
@@ -38,7 +22,6 @@ const buddies = require('./routes/buddies');
 const messages = require('./routes/messages');
 const requests = require('./routes/requests');
 
-///////////////
 
 app.use('/images', images);
 app.use('/texttospeech', textToSpeech);
@@ -51,15 +34,13 @@ app.use('/buddies', buddies);
 app.use('/messages', messages);
 app.use('/requests', requests);
 
-///////////////
-
 
 /**
  * returns all languages
  */
 app.get('/languages', (req, res) => {
   db.getAllLanguages()
-    .then(languages => {
+    .then((languages) => {
       res.json(languages);
-    })
-})
+    });
+});

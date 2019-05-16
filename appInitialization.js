@@ -1,11 +1,11 @@
 require('dotenv').config();
-const express = require('express');
-const app = express();
+const app = require('express')();
 
 const port = 3000;
+// eslint-disable-next-line no-console
 const httpInstance = app.listen(port, () => console.log(`Vocapp server listening on port ${port}!`));
 
 module.exports = {
   app,
-  httpInstance
-}
+  httpInstance,
+};

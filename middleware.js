@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const { db } = require('./database/models');
 
 module.exports = {
@@ -10,7 +11,7 @@ module.exports = {
       console.log(result);
       next();
     }).catch((err) => {
-      console.log(err)
+      console.log(err);
       res.redirect('/auth/');
     });
   },
