@@ -233,7 +233,7 @@ User.hasMany(Message, {as: {singular: "receiver", plural: "receivers"}, foreignK
 
 
 sequelize
-  .sync(/* {force: true} */)
+  .sync({force: true})
   .then(result => {
     console.log('succesfully connected to database');
     // adds languages if they do not exist
@@ -331,6 +331,20 @@ sequelize
           lang_code: 'zu',
           flag_url: 'https://lipis.github.io/flag-icon-css/flags/4x3/za.svg',
           active: true,
+      },
+      {
+        name: 'japanese',
+        lang_code: 'ja',
+        active: true,
+        transSTT: 'google',
+        transTTS: 'google',
+      },
+      {
+        name: 'korean',
+        lang_code: 'ko',
+        active: true,
+        transSTT: 'google',
+        transTTS: 'google',
       },
     ];
     const addLanguages = (languageArr) => {
